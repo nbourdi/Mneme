@@ -9,10 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="diary.png" />
     <None Remove="Screenshot 2024-09-09 161458.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="diary.png" />
     <Resource Include="Screenshot 2024-09-09 161458.png" />
   </ItemGroup>
 

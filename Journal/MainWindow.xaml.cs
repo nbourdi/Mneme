@@ -9,6 +9,8 @@ namespace Journal
 {
     public partial class MainWindow : Window
     {
+        private JournalEntry selectedEntry = null;
+
         private List<JournalEntry> entries = new List<JournalEntry>();
         private readonly string saveFilePath = "journal_entries.json";
 
@@ -23,6 +25,7 @@ namespace Journal
             TitleTextBox.Text = string.Empty;
             ContentTextBox.Text = string.Empty;
             EntriesListBox.SelectedItem = null;
+            selectedEntry = null;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -36,31 +39,71 @@ namespace Journal
                 return;
             }
 
-            var newEntry = new JournalEntry
+            if (selectedEntry != null)
             {
-                Title = title,
-                Content = content,
-                DateCreated = DateTime.Now
-            };
+                // Update the existing entry
+                selectedEntry.Title = title;
+                selectedEntry.Content = content;
 
-            entries.Add(newEntry);
-            EntriesListBox.Items.Add(newEntry);
+                // Refresh the ListBox
+                EntriesListBox.Items.Refresh();
+
+                selectedEntry = null; // Clear after updating
+            }
+            else
+            {
+                // Create new entry
+                var newEntry = new JournalEntry
+                {
+                    Title = title,
+                    Content = content,
+                    DateCreated = DateTime.Now
+                };
+
+                entries.Add(newEntry);
+                EntriesListBox.Items.Add(newEntry);
+            }
 
             SaveEntries(); // Save to file
-            MessageBox.Show("Entry saved!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             TitleTextBox.Text = string.Empty;
             ContentTextBox.Text = string.Empty;
+            EntriesListBox.SelectedItem = null;
         }
+
 
         private void EntriesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (EntriesListBox.SelectedItem is JournalEntry selectedEntry)
+            if (EntriesListBox.SelectedItem is JournalEntry entry)
             {
-                TitleTextBox.Text = selectedEntry.Title;
-                ContentTextBox.Text = selectedEntry.Content;
+                selectedEntry = entry;
+                TitleTextBox.Text = entry.Title;
+                ContentTextBox.Text = entry.Content;
             }
         }
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (EntriesListBox.SelectedItem is JournalEntry entryToDelete)
+            {
+                var result = MessageBox.Show($"Are you sure you want to delete \"{entryToDelete.Title}\"?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    entries.Remove(entryToDelete);
+                    EntriesListBox.Items.Remove(entryToDelete);
+                    SaveEntries(); // Save to file
+
+                    // Clear fields
+                    TitleTextBox.Text = string.Empty;
+                    ContentTextBox.Text = string.Empty;
+                    selectedEntry = null;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an entry to delete.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
 
         private void SaveEntries()
         {
@@ -80,6 +123,23 @@ namespace Journal
                     EntriesListBox.Items.Add(entry);
                 }
             }
+        }
+    }
+    public class JournalEntry
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public DateTime DateCreated { get; set; }
+
+        // Add a parameterless constructor
+        public JournalEntry() { }
+
+        // Keep the existing constructor with parameters
+        public JournalEntry(string title, string content)
+        {
+            Title = title;
+            Content = content;
+            DateCreated = DateTime.Now;
         }
     }
 }

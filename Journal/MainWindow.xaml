@@ -5,9 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Journal"
         mc:Ignorable="d"
-        Title="Journal" Height="600" Width="800">
+        Title="Mneme" 
+        Height="630"
+        Width="800"
+        ResizeMode="NoResize"
+        Icon="/diary.png"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <Window.Resources>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!--      
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
@@ -21,15 +35,10 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
-        <!-- Style for all TextBoxes -->
-        <Style TargetType="TextBox">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
+        <! Style for all TextBoxes 
+        
 
-        <!-- Style for all Labels -->
+        <!- Style for all Labels
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
@@ -38,29 +47,30 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
 
-        <!-- Style for ListBox -->
+        <!- Style for ListBox 
         <Style TargetType="ListBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
-
+-->
     </Window.Resources>
 
-    <Grid Margin="0,0,0,-6" Background="#FFFFF8F8">
+
+    <Grid Margin="0,0,0,-6" Background="#FF1A1A1A">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <!-- Entry Title -->
         <TextBox x:Name="TitleTextBox"
-                 HorizontalAlignment="Left" Margin="50,49,0,0"
+                 HorizontalAlignment="Left" Margin="45,49,0,0"
                  TextWrapping="Wrap"
                  VerticalAlignment="Top"
                  Height="61" Width="498"
-                 Background="#FFFFF8F8"
+                 Background="#FF1E1E1E"
                  BorderBrush="{x:Null}"
-                 Text="Title"/>
+                 Text="Title" Foreground="White" FontSize="19" FontWeight="Bold"/>
 
         <!-- Entry Content -->
         <TextBox x:Name="ContentTextBox"
@@ -70,28 +80,43 @@
                  Width="498" Height="373"
                  BorderBrush="{x:Null}"
                  AcceptsReturn="True"
-                 Text=""/>
+                 Text="" Background="#FF1E1E1E" Foreground="White"/>
 
-        <!-- Save Button -->
-        <Button x:Name="SaveButton"
-                Content="Save Entry"
-                HorizontalAlignment="Left"
-                Margin="463,538,0,0"
-                VerticalAlignment="Top"
-                Click="SaveButton_Click"/>
+
 
         <!-- Entry List -->
-        <ListBox x:Name="EntriesListBox"
-                 Margin="580,80,0,0"
-                 SelectionChanged="EntriesListBox_SelectionChanged"/>
+        <ListBox x:Name="EntriesListBox" Margin="580,49,0,0" SelectionChanged="EntriesListBox_SelectionChanged" d:ItemsSource="{d:SampleData ItemCount=5}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5,2">
+                        <Grid.ColumnDefinitions>
+                            <!-- Title column stretches to fill available space -->
+                            <ColumnDefinition Width="100" />
+                            <!-- Date column has auto width -->
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Title TextBlock: Truncated with ellipsis if too long -->
+                        <TextBlock Text="{Binding Title}" 
+                           VerticalAlignment="Center" 
+                           Grid.Column="0"
+                           TextTrimming="CharacterEllipsis" 
+                           HorizontalAlignment="Left"
+                           Margin="0,0,10,0" FontStyle="Italic" Foreground="AliceBlue"/>
+
+                        <!-- Date TextBlock: Right aligned with simple format-->
+                        <TextBlock Text="{Binding DateCreated, StringFormat='MMM dd'}"  
+                                  Foreground="#FF4D4D4D"  
+                                  VerticalAlignment="Center"  
+                                  HorizontalAlignment="Right"  
+                                  Grid.Column="1" />
+
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <!-- Past Entries Label -->
-        <Label Content="Past Entries"
-               HorizontalAlignment="Left"
-               Height="29"
-               Margin="581,29,0,0"
-               VerticalAlignment="Top"
-               Width="129"/>
 
         <!-- New Entry Button -->
         <Button x:Name="NewEntryButton"
@@ -100,11 +125,27 @@
                 Margin="0,539,0,0"
                 VerticalAlignment="Top"
                 RenderTransformOrigin="0.5,0.5"
-                Background="#FFFFF4D2"
+                Background="#FF3C2E2E"
                 BorderBrush="#00000000"
                 FontFamily="Bahnschrift SemiBold"
                 Click="NewEntryButton_Click"/>
 
+        <!-- Save Button -->
+        <Button x:Name="SaveButton"
+                Content="Save Entry"
+                HorizontalAlignment="Left"
+                Margin="463,538,0,0"
+                VerticalAlignment="Top"
+                RenderTransformOrigin="0.5,0.5"
+                Background="#FF3C2E2E"
+                BorderBrush="#00000000"
+                FontFamily="Bahnschrift SemiBold"
+                Click="SaveButton_Click"/>
+        <Button x:Name="DeleteButton"
+                Content="Delete&#xD;&#xA;&#xD;&#xA;"
+                Margin="50,537,0,0"
+                VerticalAlignment="Top"
+                Click="DeleteButton_Click" Height="31" Width="71" Background="#0FFF0000"/>
         <!-- Instruction Label -->
         <Label Content="How was your day?"
                HorizontalAlignment="Left"
