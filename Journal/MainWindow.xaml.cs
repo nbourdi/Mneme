@@ -17,7 +17,22 @@ namespace Journal
         public MainWindow()
         {
             InitializeComponent();
-            LoadEntries();
+            {
+                InitializeComponent();
+
+                var passwordWindow = new PasswordWindow();
+                bool? result = passwordWindow.ShowDialog();
+
+                if (result != true || !passwordWindow.IsUnlocked)
+                {
+                    // User closed window or failed to unlock
+                    Application.Current.Shutdown();
+                }
+
+                LoadEntries();
+            }
+
+
         }
 
         private void NewEntryButton_Click(object sender, RoutedEventArgs e)
@@ -60,8 +75,9 @@ namespace Journal
                     DateCreated = DateTime.Now
                 };
 
-                entries.Add(newEntry);
-                EntriesListBox.Items.Add(newEntry);
+                entries.Insert(0, newEntry);
+                EntriesListBox.Items.Insert(0, newEntry);
+
             }
 
             SaveEntries(); // Save to file

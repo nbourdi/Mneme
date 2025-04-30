@@ -154,5 +154,12 @@
                FontSize="12"
                FontWeight="Normal"
                FontStyle="Italic"/>
+        <Label Content=""
+               HorizontalAlignment="Left"
+               Margin="426,110,0,0"
+               VerticalAlignment="Top"
+               FontSize="12"
+               FontWeight="Normal"
+               FontStyle="Italic"/>
     </Grid>
 </Window>
